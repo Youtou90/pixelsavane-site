@@ -280,6 +280,92 @@
     composer();
   }
 
+  /* Page de vente : le mot qui tourne dans le titre */
+  var rot = document.querySelector("[data-mots]");
+  if (rot && !reduit) {
+    var mots = rot.getAttribute("data-mots").split("|"), mi = 0;
+    setInterval(function () {
+      rot.classList.add("is-out");
+      setTimeout(function () {
+        mi = (mi + 1) % mots.length;
+        rot.textContent = mots[mi];
+        rot.classList.remove("is-out");
+      }, 300);
+    }, 2400);
+  }
+
+  /* Page de vente : onglets des tarifs (sans JS, toutes les formules restent visibles) */
+  var tabs = document.querySelectorAll("[data-tab]");
+  if (tabs.length) {
+    var ouvrir = function (cle) {
+      tabs.forEach(function (t) {
+        var on = t.getAttribute("data-tab") === cle;
+        t.setAttribute("aria-selected", on ? "true" : "false");
+        t.tabIndex = on ? 0 : -1;
+        document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+      });
+    };
+    tabs.forEach(function (t, n) {
+      t.addEventListener("click", function () { ouvrir(t.getAttribute("data-tab")); });
+      t.addEventListener("keydown", function (e) {
+        var sens = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+        if (!sens) return;
+        var autre = tabs[(n + sens + tabs.length) % tabs.length];
+        autre.focus();
+        ouvrir(autre.getAttribute("data-tab"));
+        e.preventDefault();
+      });
+    });
+    document.querySelectorAll("[data-onglet]").forEach(function (a) {
+      a.addEventListener("click", function () { ouvrir(a.getAttribute("data-onglet")); });
+    });
+    ouvrir(tabs[0].getAttribute("data-tab"));
+  }
+
+  /* Page de vente : « Composez votre projet », le prix et le message se calculent seuls */
+  var compo = document.querySelector("[data-composeur]");
+  if (compo) {
+    var milliers = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, " "); };
+    var tTotal = compo.querySelector("[data-total]");
+    var tDes = compo.querySelector("[data-total-des]");
+    var tMois = compo.querySelector("[data-total-mois]");
+    var tEnvoi = compo.querySelector("[data-total-envoyer]");
+    var affiche = 0;
+    var animer = function (vers) {
+      if (reduit) { tTotal.textContent = milliers(vers); affiche = vers; return; }
+      var depart = affiche, t0 = null;
+      var pas = function (t) {
+        if (!t0) t0 = t;
+        var p = Math.min((t - t0) / 450, 1);
+        tTotal.textContent = milliers(Math.round(depart + (vers - depart) * (1 - Math.pow(1 - p, 3))));
+        if (p < 1) requestAnimationFrame(pas); else affiche = vers;
+      };
+      requestAnimationFrame(pas);
+    };
+    var calculer = function () {
+      var somme = 0, mois = 0, des = false, choix = [];
+      compo.querySelectorAll("input:checked").forEach(function (i) {
+        if (!i.value) return;
+        somme += parseInt(i.getAttribute("data-prix"), 10);
+        if (i.hasAttribute("data-mois")) mois += parseInt(i.getAttribute("data-mois"), 10);
+        if (i.hasAttribute("data-des")) des = true;
+        choix.push(i.value);
+      });
+      animer(somme);
+      tDes.textContent = des ? "dès " : "";
+      tMois.textContent = mois ? "+ " + milliers(mois) + " FCFA / mois" : "";
+      var msg = choix.length
+        ? "Bonjour PixelSavane, voici mon projet : " + choix.join(", ") + ". Estimation : " +
+          (des ? "dès " : "") + milliers(somme) + " FCFA" + (mois ? " + " + milliers(mois) + " FCFA/mois" : "") +
+          ". Mon activité :"
+        : "Bonjour PixelSavane, j’ai un projet :";
+      tEnvoi.setAttribute("aria-disabled", choix.length ? "false" : "true");
+      tEnvoi.href = "https://wa.me/" + WA + "?text=" + encodeURIComponent(msg);
+    };
+    compo.addEventListener("change", calculer);
+    calculer();
+  }
+
   /* Visionneuse des démonstrations */
   var zoom = document.querySelector("[data-zoom]");
   if (zoom) {

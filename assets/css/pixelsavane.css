@@ -383,6 +383,56 @@ body{margin:0;background:#0E0E10}
 .ps-apercu{padding:14px 16px;border-radius:12px;background:var(--ink);border:1px dashed var(--l2);font-size:13px;line-height:1.6;color:#D6D0C7;white-space:pre-line;overflow-wrap:anywhere}
 .ps-apercu>span:first-child{display:block;font-family:var(--fs);font-weight:600;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin-bottom:6px}
 
+/* Page de vente (pixelsavane-page) : mêmes jetons, quelques composants en plus */
+.ps-rot{display:inline-block;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.ps-rot.is-out{opacity:0;transform:translateY(.25em)}
+.ps-prixdep{margin:0;font-size:15px;color:var(--t2)}
+.ps-prixdep strong{font-family:var(--ft);font-weight:700;font-size:20px;color:var(--w);font-variant-numeric:tabular-nums}
+.ps-douleurs{list-style:none;margin:0;padding:0;gap:16px}
+.ps-douleurs>li{padding:26px;gap:12px;background:var(--ink)}
+.ps-douleurs .ps-h3{font-size:clamp(18px,1.45cqi,21px)}
+.ps-svc__prix{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;padding-top:12px;border-top:1px solid var(--l)}
+.ps-svc__prix .ps-num{font-size:19px;color:var(--w)}
+.ps-svc__prix b{font-family:var(--fs);font-weight:600;font-size:11.5px;letter-spacing:.04em;color:var(--o)}
+.ps-onglets{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.ps-onglets::-webkit-scrollbar{display:none}
+.ps-onglets .ps-btn{flex:none}
+.ps-formules{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))}
+.ps-formule{padding:26px 24px 24px;gap:16px}
+.ps-formule .ps-eye{color:var(--t2)}
+.ps-formule .ps-eye::before{background:var(--o)}
+.ps-formule__prix{margin:0;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px;font-family:var(--ft);font-weight:700;font-size:clamp(34px,3cqi,42px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.ps-formule__prix small{font-family:var(--fs);font-weight:600;font-size:13px;letter-spacing:0;color:var(--t3)}
+.ps-formule__prix b{font-family:var(--fs);font-weight:600;font-size:13px;letter-spacing:.04em;color:var(--o)}
+.ps-formule__mois{margin:-8px 0 0;font-family:var(--fs);font-weight:600;font-size:14px;color:var(--o)}
+.ps-formule .ps-checks{flex:1 1 auto}
+.ps-formule .ps-checks li{font-size:15.5px}
+.ps-formule .ps-btn{align-self:stretch}
+.ps-panneau{animation:psPop .45s var(--ease) both}
+.ps-compo{display:flex;flex-wrap:wrap;align-items:flex-start;gap:clamp(20px,3cqi,40px)}
+.ps-compo__form{flex:1 1 520px;min-width:0;display:flex;flex-direction:column;gap:22px}
+.ps-compo fieldset{margin:0;padding:22px;border-radius:18px;border:1px solid var(--l);background:var(--s1);display:flex;flex-direction:column;gap:12px}
+.ps-compo legend{padding:0 6px;font-family:var(--fs);font-weight:600;font-size:16px}
+.ps-check small{font-family:var(--ft);font-weight:700;font-size:13px;color:var(--t3);font-variant-numeric:tabular-nums}
+.ps-check:has(input:checked) small{color:var(--o)}
+.ps-total{flex:1 1 300px;min-width:0;position:sticky;top:96px;padding:clamp(22px,3cqi,32px);border-radius:18px;border:1px solid var(--o);background:var(--s1);display:flex;flex-direction:column;gap:12px;box-shadow:0 0 60px -20px rgba(242,140,40,.35)}
+.ps-total__prix{margin:0;font-family:var(--ft);font-weight:700;font-size:clamp(40px,4cqi,56px);line-height:1;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.ps-total__prix small{font-family:var(--fs);font-size:15px;font-weight:600;color:var(--t2);letter-spacing:0}
+.ps-total__prix b{font-family:var(--fs);font-size:15px;font-weight:600;color:var(--o);letter-spacing:.04em}
+.ps-total .ps-btn[aria-disabled=true]{opacity:.45;pointer-events:none}
+.ps-croix li svg{flex:none;margin-top:1px}
+.ps-pourqui{gap:16px}
+.ps-pourqui>div{padding:28px;gap:18px}
+.ps-faq{border-top:1px solid var(--l)}
+.ps-faq details{border-bottom:1px solid var(--l)}
+.ps-faq summary{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;padding:12px 4px;cursor:pointer;list-style:none;font-family:var(--fs);font-weight:600;font-size:17px;line-height:1.35}
+.ps-faq summary::-webkit-details-marker{display:none}
+.ps-faq summary::after{content:"+";flex:none;width:32px;height:32px;border-radius:4px;border:1px solid var(--l2);display:flex;align-items:center;justify-content:center;font-family:var(--ft);font-size:20px;color:var(--o);transition:transform .3s var(--ease),background-color .3s}
+.ps-faq details[open] summary::after{transform:rotate(45deg);background:var(--s2)}
+.ps-faq summary:focus-visible{outline:2px solid var(--w);outline-offset:3px}
+.ps-faq .ps-p{padding:0 4px 22px;max-width:44rem}
+@container ps (max-width: 760px){.ps-total{position:static}}
+
 /* Repli des apparitions au défilement (Safari, Firefox) : main.js ajoute .no-vt puis .is-in */
 .no-vt .ps-rv{opacity:0;transform:translateY(26px)}
 .no-vt .ps-rv.is-in{animation:psRise .9s var(--ease) both}
